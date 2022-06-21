@@ -3,6 +3,7 @@
 
 const { now } = require('mongoose');
 const Event = require('../models/event.model');
+const { find } = require('../models/house.model');
 const House = require('../models/house.model');
 const { param } = require('../routes/user.routes');
 
@@ -72,11 +73,21 @@ exports.saveEvent = async (req, res) =>
 
         const dateAlready = await Event.findOne({
                 $and: [
-                    { date: params.startDate },
+                    { startDate: params.startDate },
                     { house: params.house }
                 ]
             });
-        if(dateAlready) return res.status(400).send({message: 'Evento create in this date'});
+        
+        const events = await Event.find({house: params.house});
+
+        if(dateAlready) return res.status(400).send({message: 'Evento ya creado en esa fecha.'});
+        
+        for (let event of events)
+        {
+            if(compareParamsStartDate >= event.startDate && compareParamsStartDate <= event.endDate)
+                return res.status(400).send({message: 'La Casa de Retiros no está Disponible en esa fecha.'})
+        }
+
         const evento = new Event(data);
         await evento.save();
         return res.send({message: 'Evento creado Exitosamente.', evento});
