@@ -3,7 +3,7 @@
 const express = require('express');
 const userController = require('../controllers/user.controller');
 const api = express.Router();
-const mdAuth = require('../middlewars/authenticated');
+const mdAuth = require('../middlewares/authenticated');
 
 //Rutas Públicas//
 api.get('/testUser',userController.testUser);
