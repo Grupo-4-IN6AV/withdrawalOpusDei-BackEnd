@@ -86,6 +86,8 @@ exports.saveEvent = async (req, res) =>
         {
             if(compareParamsStartDate >= event.startDate && compareParamsStartDate <= event.endDate)
                 return res.status(400).send({message: 'La Casa de Retiros no está Disponible en esa fecha.'})
+            if(compareParamsEndDate >= event.startDate && compareParamsEndDate <= event.endDate)
+                return res.status(400).send({message: 'La Casa de Retiros no está Disponible en esa fecha.'})
         }
 
         const evento = new Event(data);
