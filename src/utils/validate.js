@@ -36,9 +36,9 @@ exports.checkPassword=async(password, hash)=>
     }
 }
 
-exports.checkUpdateAdmin = async(user)=>{
-    if(user.password || user.role ||
-       Object.entries(user).length === 0){
+exports.checkUpdateAdmin = async(data)=>{
+    if(data.password || data.role ||
+       Object.entries(data).length === 0){
         return false;
     }else{
         return true;

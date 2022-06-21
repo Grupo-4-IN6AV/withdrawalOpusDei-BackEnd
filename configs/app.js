@@ -14,6 +14,8 @@ const port = 3200 || process.env.PORT;
 
 //Importación de las Rutas//
 const userRoutes = require('../src/routes/user.routes');
+const houseRoutes = require('../src/routes/house.routes');
+
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use(bodyParser.json());
 app.use(helmet({}));
 app.use(cors());
 app.use('/user', userRoutes);
+app.use('/house', houseRoutes);
+
 
 
 exports.initServer = ()=> app.listen(port, async ()=>

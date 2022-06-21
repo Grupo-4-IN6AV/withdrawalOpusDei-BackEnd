@@ -125,7 +125,6 @@ exports.updateOrganizer = async(req, res)=>
         const organizadorEditado = await User.findOneAndUpdate({_id: userId}, params, {new: true});
         if(!organizadorEditado) return res.status(400).send({message: 'Organizador no Editado.'});
         return res.send({message: 'Organizador Editado Exitosamente.', organizadorEditado});
-
     }
     catch(err)
     {
