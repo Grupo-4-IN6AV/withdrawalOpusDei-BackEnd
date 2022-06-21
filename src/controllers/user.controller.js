@@ -160,7 +160,7 @@ exports.getOrganizers = async (req , res) =>
     try 
     {
         const organizadores = await User.find({role: 'ORGANIZADOR'})
-        if(organizadores)
+        if(organizadores.length !== 0)
             return res.send({message:'Organizadores Encontrados:', organizadores})
         return res.status(400).send({message:'Aún no existen Organizadores registrados.'})
     } 
@@ -181,9 +181,9 @@ exports.getOrganizersForGender = async (req , res) =>
         const gender = params.gender
         const organizadores = await User.find({$and:[{role: 'ORGANIZADOR'},{gender: 'MASCULINO'}]})
         const organizadoras = await User.find({$and:[{role: 'ORGANIZADOR'},{gender: 'FEMENINO'}]})
-        if(organizadores && gender == 'MASCULINO')
+        if(organizadores.length !== 0 && gender == 'MASCULINO')
             return res.send({message:'Organizadores Encontrados:', organizadores})
-        if(organizadores && gender == 'FEMENINO')
+        if(organizadores.length !== 0 && gender == 'FEMENINO')
             return res.send({message:'Organizadoras Encontradas:', organizadoras})
         return res.status(400).send({message:'Aún no existen Organizadores registrados.'})
     } 

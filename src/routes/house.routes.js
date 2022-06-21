@@ -8,6 +8,7 @@ const mdAuth = require('../middlewares/authenticated');
 //Rutas Públicas//
 api.get('/testHouse', houseController.testHouse);
 api.get('/obtenerCasas', houseController.getHouses);
+api.get('/obtenerCasasPorPais', houseController.getHousesForCountry);
 api.get('/obtenerCasa/:id', houseController.getHouse);
 
 

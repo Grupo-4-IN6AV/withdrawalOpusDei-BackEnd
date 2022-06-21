@@ -105,8 +105,29 @@ exports.getHouses = async (req, res)=>
     try
     {
         const casas = await House.find();
-        if(!casas)
+        if(casas.length == 0)
             return res.send({message: 'Aún no existen Casas de Retiro.'})
+        return res.send({message: 'Casas de Retiro Encontradas:', casas})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return res.status(500).send({ message: 'Error obteniendo las Casas.' });
+    }
+}
+
+
+//Función para mostrar todas las casas//
+exports.getHousesForCountry = async (req, res)=>
+{
+    try
+    {
+        const params = req.body;
+        const country = params.country
+
+        const casas = await House.find({country: country});
+        if(casas.length == 0)
+            return res.send({message: 'Aún no existen Casas de Retiro en Este País.'})
         return res.send({message: 'Casas de Retiro Encontradas:', casas})
     }
     catch(err)
