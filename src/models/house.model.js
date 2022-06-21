@@ -6,12 +6,6 @@ const houseSchema = mongoose.Schema({
     country: String,
     township: String,
     address: String,
-    rooms: 
-    [{
-        quantityBeds: Number,
-        availability: Boolean,
-        nameRoom: String,
-    }]
 });
 
-module.exports = mongoose.model('House',houseSchema);
+module.exports = mongoose.model('House', houseSchema);

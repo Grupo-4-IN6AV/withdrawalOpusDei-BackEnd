@@ -15,7 +15,7 @@ const port = 3200 || process.env.PORT;
 //Importación de las Rutas//
 const userRoutes = require('../src/routes/user.routes');
 const houseRoutes = require('../src/routes/house.routes');
-
+const eventRoutes = require('../src/routes/event.routes');
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(helmet({}));
 app.use(cors());
 app.use('/user', userRoutes);
 app.use('/house', houseRoutes);
-
+app.use('/event', eventRoutes);
 
 
 exports.initServer = ()=> app.listen(port, async ()=>

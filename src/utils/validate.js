@@ -8,7 +8,7 @@ exports.validateData = (data) => {
 
     for (let key of keys) {
         if (data[key] !== null && data[key] !== undefined && data[key] !== '' && data[key] !== "null" && data[key] !== "undefined") continue;
-        msg += `The params ${key} is required.\n`
+        msg += `El parámetro ${key} es requerido.\n`
     }
     return msg.trim();
 }
