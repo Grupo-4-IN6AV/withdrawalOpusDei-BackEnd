@@ -146,7 +146,7 @@ exports.getHouse = async (req, res)=>
         const housesId = req.params.id
         const casa = await House.findOne({_id: housesId});
         if(!casa)
-            return res.send({message: 'Casa de Retiro no Encontrada.'})
+            return res.status(400).send({message: 'Casa de Retiro no Encontrada.'})
         return res.send({message: 'Casa de Retiro Encontrada:', casa})
     }
     catch(err)
