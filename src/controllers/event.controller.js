@@ -1,12 +1,8 @@
 'use strict'
 
-
-const { now } = require('mongoose');
 const Event = require('../models/event.model');
-const { find } = require('../models/house.model');
 const House = require('../models/house.model');
-const { param } = require('../routes/user.routes');
-
+const User = require('../models/user.model');
 const { validateData } = require('../utils/validate');
 
 
@@ -30,13 +26,39 @@ exports.saveEvent = async (req, res) =>
             endDate: params.endDate,
             typeEvent: params.typeEvent,
             house: params.house,
+            organizer: params.organizer,
+            typePublic: params.typePublic
         };
+
         const msg = validateData(data);
         if (msg)
             return res.status(400).send(msg);
 
         const house = await House.findOne({ _id: params.house }); //Buscar la casa que se envia en parans
-        if (!house) return res.send({ message: 'Casa de Retiros no Econtrada.' });
+        if (!house) return res.status(400).send({ message: 'Casa de Retiros no Econtrada.' });
+        
+        const organizer = await User.findOne({$and:[{_id:params.organizer},{role:'ORGANIZADOR'}]});
+        if(!organizer) return res.status(400).send({message: 'Organizad@r no Encontrado.'})
+
+
+        //VERIFICAR QUE EL ORGANIZADOR SEA ADECUADO PARA EL TIPO DE PÚBLICO//
+
+        //Eventos Femeninos
+        if
+        (
+            (params.typePublic == 'Universitarias' || params.typePublic == 'Religiosas' || 
+            params.typePublic == 'Estudiantes F' || params.typePublic == 'Señoras') && (organizer.gender == 'MASCULINO')
+        )
+        return res.status(400).send({message: 'El organizador de este evento no puede ser de género Masculino.'})
+        
+        //Eventos Masculinos
+        if
+        (
+            (params.typePublic == 'Universitarios' || params.typePublic == 'Sacerdotes' || 
+            params.typePublic == 'Estudiantes M' || params.typePublic == 'Señores') && (organizer.gender == 'FEMENINO')
+        )
+        return res.status(400).send({message: 'El organizador de este evento no puede ser de género Femenino.'})
+
         const eventAlready = await Event.findOne({
             $and: [
                     { house: data.house },
@@ -102,14 +124,18 @@ exports.saveEvent = async (req, res) =>
 }
 
 //Función para eliminar un evento//
-exports.deleteEvent = async (req, res) => {
+exports.deleteEvent = async (req, res) => 
+{
     try
     {
         const eventId = req.params.id;
         const eventoEliminado = await Event.findOneAndDelete({ _id: eventId });
-        if (!eventoEliminado) {
-            return res.status(400).send({ message: 'Event no Encotrado o ya Eliminado.' });
-        } else {
+        if (!eventoEliminado) 
+        {
+            return res.status(400).send({ message: 'Evento no Encotrado o ya Eliminado.' });
+        } 
+        else 
+        {
             return res.send({message: 'Evento Eliminado Exitosamente.',eventoEliminado });
         }
     } 
@@ -129,16 +155,16 @@ exports.updateEvent = async (req, res) =>
         const params = req.body;
         
         const eventExist = await Event.findOne({_id: eventId});
-        if(!eventExist) return res.send({message: 'Evento no Encontrado.'});
+        if(!eventExist) return res.status(400).send({message: 'Evento no Encontrado.'});
 
         const alreadyEventDate = await Event.findOne({$and:[{startDate: params.startDate},{_id:eventExist._id},{house:params.house}]});
         if(alreadyEventDate) 
             return res.status(400).send({message: 'Ya existe un evento creado en esa fecha y en esa casa'});
-        let alreadyEventName = await Event.findOne({nameEvent: params.nameEvent});
+        let alreadyEventName = await Event.findOne({name: params.name});
         if(alreadyEventName && eventExist.nameEvent != params.nameEvent) 
-        return res.status(400).send({message: 'Event is already exist, choose other name for Event'});
-            const updateEvent = await Event.findByIdAndUpdate({_id: eventId}, params, {new: true});
-        return res.send({message: 'Update Event successfully', updateEvent});
+        return res.status(400).send({message: 'Ya existe un evento con ese nombre.'});
+            const eventoEditado = await Event.findOneAndUpdate({_id: eventId}, params, {new: true});
+        return res.send({message: 'Evento Editado Exitosamente.', eventoEditado});
         
     } 
     catch (err) 
@@ -191,7 +217,7 @@ exports.getEventsForHouse = async (req, res)=>
 }
 
 
-//Función para mostrar una habitación//
+//Función para mostrar un Evento//
 exports.getEvent = async (req, res)=>{
     try
     {
