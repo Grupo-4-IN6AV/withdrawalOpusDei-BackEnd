@@ -18,6 +18,7 @@ const houseRoutes = require('../src/routes/house.routes');
 const eventRoutes = require('../src/routes/event.routes');
 const roomRoutes = require('../src/routes/room.routes');
 const reservationRoutes = require('../src/routes/reservation.routes');
+const contactRoutes = require('../src/routes/contact.routes')
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use('/house', houseRoutes);
 app.use('/event', eventRoutes);
 app.use('/room', roomRoutes);
 app.use('/reservation', reservationRoutes);
+app.use('/contact', contactRoutes)
 
 
 exports.initServer = ()=> app.listen(port, async ()=>
