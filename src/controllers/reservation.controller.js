@@ -81,11 +81,11 @@ exports.saveReservation = async (req, res) =>
         //Actualizar Estado de las Habitaciones//
         const updateQuantityPeople = await Room.findOneAndUpdate(
             {_id:params.room},
-            { $inc: { quantityPeople: -1 } },
+            { $inc: { actualQuantityPeople: -1 } },
             {new: true}
             )
 
-        if (updateQuantityPeople.quantityPeople == 0)
+        if (updateQuantityPeople.actualQuantityPeople == 0)
             var updateAvailability = await Room.findOneAndUpdate(
                 {_id:params.room},{availability:false},{new:true})
         
@@ -101,3 +101,52 @@ exports.saveReservation = async (req, res) =>
     }
 }
 
+
+//Función para Resetear Habitaciones
+exports.resetRooms = async (req, res) => 
+{
+    try 
+    {
+        const data = 
+        {
+            date: new Date(),
+        };
+
+        const dateLocal = (data.date).toLocaleString('UTC',{timeZone: 'America/Guatemala'});
+        const splitDate = dateLocal.split(' ');
+        const splitDateOne = splitDate[0].split('/');
+
+        if (splitDateOne[0] < 10) 
+        {
+            splitDateOne[0] = '0' + splitDateOne[0];
+        }
+        if (splitDateOne[1] < 10) 
+        {
+            splitDateOne[1] = '0' + splitDateOne[1];
+        }
+
+        const setDate = 
+        splitDateOne[2] + '-' + splitDateOne[1] + '-' + splitDateOne[0] +
+            'T00:00:00.000Z';
+
+        //TODOS LOS EVENTOS//
+        const events = await Event.find({endDate:setDate});
+        if (events.length!==0)
+        {
+            const rooms = await Room.find({})
+            for(let room of rooms)
+            {
+                const roomData = await Room.findOne({_id:room._id});
+                const roomUpdate = await Room.findOneAndUpdate({_id:room._id},
+                    {actualQuantityPeople:roomData.quantityPeople, availability:true},{new:true})
+            }
+            return res.send({message:'Habitaciones Liberadas.'});
+        }
+        return res.send({message:'No Hay Habitaciones Disponibles.'});
+    } 
+    catch (err) 
+    {
+        console.log(err);
+        return res.status(500).send({ message: 'Error reseteando las Habitaciones.' });
+    }
+}

@@ -25,6 +25,7 @@ exports.saveRoom = async(req,res)=>
             quantityPeople: params.quantityPeople,
             name: params.name,
             house: params.house,
+            actualQuantityPeople: params.quantityPeople,
         };
 
         const msg = validateData(data);

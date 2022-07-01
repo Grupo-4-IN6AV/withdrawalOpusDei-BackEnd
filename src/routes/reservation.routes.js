@@ -10,5 +10,7 @@ api.get('/testReservation', reservationController.testReservation);
 
 //Rutas Públicas//
 api.post('/crearReservacion', reservationController.saveReservation)
+api.get('/resetearHabitaciones', reservationController.resetRooms)
+
 
 module.exports = api;
