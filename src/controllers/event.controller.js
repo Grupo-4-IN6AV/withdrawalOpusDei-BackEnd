@@ -191,6 +191,23 @@ exports.getEvents = async (req, res)=>
     }
 }
 
+//Función para mostrar todas los eventos de un Organizador//
+exports.getEventsForOrganizer = async (req, res)=>
+{
+    try
+    {
+        const events = await Event.find({organizer:req.user.sub});
+        if (events.length == 0)
+            return res.send({message: 'Aún no existen Eventos.'})
+        return res.send({message: 'Eventos Encontrados:', events})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return res.status(500).send({ message: 'Error obteniendo los Eventos.' });
+    }
+}
+
 
 //Función para mostrar todas los eventos de una Casa//
 exports.getEventsForHouse = async (req, res)=>
