@@ -214,11 +214,11 @@ exports.login = async (req, res) =>
                 [{username:params.account},{email:params.account}]});
             if (userExist && await checkPassword(params.password, userExist.password)) {
                 const token = await jwt.createToken(userExist);
-                return res.send({ token, message: 'Sesión Iniciada.' });
+                return res.send({ token, message: 'Sesión Iniciada.', userExist });
             } 
             else 
             {
-                return res.send({ message: 'Credenciales Inválidas.' });
+                return res.status(400).send({ message: 'Credenciales Inválidas.' });
             }
         } 
         else 

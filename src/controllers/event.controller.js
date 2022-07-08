@@ -179,8 +179,8 @@ exports.getEvents = async (req, res)=>
 {
     try
     {
-        const events = await Event.find();
-        if (events.length == 0)
+        const events = await Event.find().populate('organizer');
+        if (events.length == 0) 
             return res.send({message: 'Aún no existen Eventos.'})
         return res.send({message: 'Eventos Encontrados:', events})
     }
