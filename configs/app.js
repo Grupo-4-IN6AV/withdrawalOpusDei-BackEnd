@@ -12,6 +12,10 @@ const helmet = require('helmet');
 const cors = require('cors');
 const port = 3200 || process.env.PORT;
 
+/*Connect MultiParty*/
+const fs = require('fs')
+const path = require('path')
+
 //Importación de las Rutas//
 const userRoutes = require('../src/routes/user.routes');
 const houseRoutes = require('../src/routes/house.routes');
@@ -54,6 +58,14 @@ exports.initServer = ()=> app.listen(port, async ()=>
         await userAdmin.save();
         console.log('Administrador General creado correctamente.')
     }
-
     console.log(`Listening on port ${port}`)
+
+    //CREACION DE LA CARPETA POR ÚNICA VEZ//
+    fs.mkdir(path.join(__dirname, '../uploads/users'),
+        { recursive: true }, (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+    });
 });

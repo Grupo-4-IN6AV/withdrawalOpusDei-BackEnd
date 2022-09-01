@@ -155,3 +155,22 @@ exports.getHouse = async (req, res)=>
         return res.status(500).send({ message: 'Error obteniendo la Casa.' });
     }
 }
+
+//Función para mostrar una casa//
+exports.getHouseForName = async (req, res)=>
+{
+    try
+    {
+        const params = req.body;
+        const houseName = params.name
+        const casas = await House.find({name: {$regex: houseName, $options: 'i'}});
+        if(!casas)
+            return res.status(400).send({message: 'Casas de Retiro no Encontradas.'})
+        return res.send({message: 'Casas de Retiro Encontrada:', casas})
+    }
+    catch(err)
+    {
+        console.log(err); 
+        return res.status(500).send({ message: 'Error obteniendo la Casa.' });
+    }
+}

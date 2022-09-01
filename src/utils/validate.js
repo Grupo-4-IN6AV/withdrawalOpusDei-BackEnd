@@ -37,10 +37,56 @@ exports.checkPassword=async(password, hash)=>
 }
 
 exports.checkUpdateAdmin = async(data)=>{
-    if(data.password || data.role ||
+    if(data.password ||
        Object.entries(data).length === 0){
         return false;
     }else{
         return true;
+    }
+}
+
+exports.checkPermission = async (userId, sub)=>
+{
+    try
+    {
+        if(userId != sub)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    catch(err)
+    {
+        console.log(err);
+        return err;
+    }
+}
+
+exports.validExtension = async (ext, filePath) => 
+{
+    try 
+    {
+        if (ext == 'png' ||
+            ext == 'jpg' ||
+            ext == 'jpeg' ||
+            ext == 'gif') 
+            {
+            return true;
+
+        } else {
+
+            fs.unlinkSync(filePath);
+
+            return false;
+
+        }
+    } 
+    catch (err) 
+    {
+        console.log(err);
+        return err;
     }
 }
