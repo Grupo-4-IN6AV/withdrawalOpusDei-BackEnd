@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 //Función - Conexión con MongoDB
 exports.init = ()=>
 {
-    const uriMongo = 'mongodb://127.0.0.1:27017/withdrawalControl';
+    const uriMongo = 'mongodb+srv://rcardenas:123@cluster-default.vxxscnf.mongodb.net/?retryWrites=true&w=majority';
 
     //Promesa de Mongo
     mongoose.Promise = global.Promise;
