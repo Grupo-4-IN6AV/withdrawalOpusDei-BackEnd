@@ -410,14 +410,18 @@ exports.addImageUser=async(req,res)=>
 
         const validExt = await validExtension(fileExt, filePath);
         if(validExt === false) return res.status(400).send('Invalid extension');
-        const updateUser = await User.findOneAndUpdate({_id: req.user.sub}, {image: fileName}, {new: true}).lean();        if(!updateUser) return res.status(404).send({message: 'User not found'});
+        const updateUser = await User.findOneAndUpdate({_id: req.user.sub}, {image: fileName}, {new: true}).lean();        
+        if(!updateUser) return res.status(404).send({message: 'User not found'});
         
         if(!updateUser) return res.status(404).send({message: 'User not found'});
+        
         delete updateUser.password;
         console.log(updateUser.image)
-        var imageAsBase64 = await  fs.readFileSync(`./uploads/${updateUser.image}`, {encoding: 'base64'});
-        console.log(imageAsBase64)
-        return res.send(updateUser);
+        var imageAsBase64 = fs.readFileSync(`./uploads/users/${updateUser.image}`);
+        var encoded = Buffer.from(imageAsBase64).toString('base64');
+        const updateUserBase64 =  await User.findOneAndUpdate({_id: req.user.sub}, {imageBase64: encoded}, {new: true}).lean();        
+
+        return res.send(updateUserBase64);
     }
     catch(err)
     {
