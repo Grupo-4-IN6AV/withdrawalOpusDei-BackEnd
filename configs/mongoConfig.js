@@ -48,5 +48,5 @@ exports.init = ()=>
         useNewUrlParser: true,
         connectTimeoutMs: 2500,
         maxPoolSize: 50
-    }).catch(err=>console.log(err));
+        }).catch(err=>console.log(err));
 }
